@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "install-backend": "cd Backend && npm install",
-    "install-frontend": "cd frontend && npm install", 
-    "build-frontend": "cd frontend && npm run build",
-    "build": "npm run install-backend && npm run install-frontend && npm run build-frontend",
+    "install-frontend": "cd Frontend && npm install", 
+    "build-frontend": "cd Frontend && npm run build",
+    "build": "npm run install-Backend && npm run install-Frontend && npm run build-Frontend",
     "start": "cd Backend && node server.js"
   }
 }
