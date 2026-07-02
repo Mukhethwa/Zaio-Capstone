@@ -1,4 +1,4 @@
-const Accommodation = require('../models/Accommodation');
+const Accommodation = require('../models/accommodation');
 
 //POST /api/accommodations - Create a new listing with flexible image support
 const createAccommodation = async (req, res) => {
@@ -50,7 +50,7 @@ const getAccommodations = async (req, res) => {
 
         return res.status(200).json(accommodations);
     } catch (error) {
-        console.error("🔥 DATABASE CRASH IN CONTROLLER:", error);
+        console.error("DATABASE CRASH IN CONTROLLER:", error);
         return res.status(500).json({ 
             message: 'Failed to fetch listings inside the controller', 
             error: error.message
