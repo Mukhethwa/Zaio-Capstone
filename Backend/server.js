@@ -40,11 +40,12 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 
 
 if (process.env.NODE_ENV === 'production' || true) {
-    // Serve static built production folder assets from frontend/build
+    //Serve static built production folder assets from frontend/build
     app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-    
-    app.get('(.*)', (req, res) => {
+    //FIXED: Switched from a string pattern to a native RegExp literal (/.*/) 
+    //This completely bypasses path-to-regexp validation errors entirely
+    app.get(/.*/, (req, res) => {
         res.sendFile(path.resolve(__dirname, '../frontend', 'build', 'index.html'));
     });
 }
