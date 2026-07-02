@@ -39,13 +39,12 @@ app.use('/api/reservations', require('./routes/reservationRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
 
-//Check if running in production (Render automatically provisions node paths)
 if (process.env.NODE_ENV === 'production' || true) {
-    //FIXED: Changed targeting from 'dist' to 'build' to perfectly sync with Create React App folder output
+    // Serve static built production folder assets from frontend/build
     app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-    //For any wildcard route that isn't explicitly an API route, serve the index.html file
-    app.get('*', (req, res) => {
+    
+    app.get('(.*)', (req, res) => {
         res.sendFile(path.resolve(__dirname, '../frontend', 'build', 'index.html'));
     });
 }
@@ -54,7 +53,6 @@ if (process.env.NODE_ENV === 'production' || true) {
 app.use((err, req, res, next) => {
     console.error("CRASH LOG DETECTED:", err.stack);
     res.status(500).json({ 
-        
         error: "Backend crashed internally!", 
         message: err.message, 
         stack: err.stack 
