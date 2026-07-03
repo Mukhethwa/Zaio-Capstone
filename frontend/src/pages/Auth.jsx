@@ -25,7 +25,7 @@ const Auth = () => {
         setSuccess('');
 
         const endpoint = isLoginMode ? '/api/users/login' : '/api/users/register';
-        const url = `http://localhost:5000${endpoint}`;
+        const url = `${endpoint}`;
 
         if (!formData.username || !formData.password || (!isLoginMode && !formData.email)) {
             setError('Please fill in all required fields.');

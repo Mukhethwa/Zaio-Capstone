@@ -23,7 +23,7 @@ const LocationDetails = () => {
     });
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/accommodations/${id}`)
+        axios.get(`/api/accommodations/${id}`)
             .then(res => setListing(res.data))
             .catch(err => {
                 console.error("API Fetch Error:", err);
@@ -74,11 +74,11 @@ const LocationDetails = () => {
                 totalPrice: grandTotalPrice
             };
 
-            await axios.post('http://localhost:5000/api/reservations', payload, {
+            const response = await axios.post('/api/reservations', payload, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             
-            setSuccess('🚀 Booking Successful! Your trip is locked in.');
+            setSuccess('Booking Successful! Your trip is locked in.');
             setTimeout(() => navigate('/profile/bookings'), 2500);
         } catch (err) {
             console.error("Reservation execution failure:", err);

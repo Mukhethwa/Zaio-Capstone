@@ -18,7 +18,7 @@ function AdminReservations() {
   const fetchReservations = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/reservations', {
+      const response = await axios.get('/api/admin/reservations', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setReservations(response.data);

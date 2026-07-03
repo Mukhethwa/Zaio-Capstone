@@ -14,8 +14,8 @@ function AdminLogin() {
     setError('');
     setLoading(true);
 
-    try {
-      const response = await axios.post('http://localhost:5000/api/users/login', {
+    try { // FIXED: Added the missing opening try block here
+      const response = await axios.post('/api/users/login', {
         username,
         password
       });

@@ -20,7 +20,7 @@ const ManageListings = () => {
     useEffect(() => {
         const fetchListings = async () => {
             try {
-                const res = await axios.get('http://localhost:5000/api/accommodations');
+                const res = await axios.get('/api/accommodations');
                 setListings(res.data);
             } catch (err) {
                 console.error("Error fetching listings:", err);
