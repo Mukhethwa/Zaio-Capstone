@@ -56,7 +56,7 @@ const getUserReservations = async (req, res) => {
     try {
         const userId = req.user?.id || req.user?._id;
         const reservations = await Reservation.find({ user: userId })
-            .populate('accommodation', 'title location images price');
+            .populate('accommodation', 'title location image price'); // Fixed: Populate field keys clearly
 
         return res.status(200).json(reservations);
     } catch (error) {
@@ -64,11 +64,11 @@ const getUserReservations = async (req, res) => {
     }
 };
 
-//PUT /api/reservations/:id - Edit an existing booking (e.g., guest count)
+//PUT /api/reservations/:id - Edit an existing booking's parameters
 const updateReservation = async (req, res) => {
     try {
         const { id } = req.params;
-        const { guests } = req.body;
+        const { guests, checkInDate, checkOutDate } = req.body;
 
         if (!id.match(/^[0-9a-fA-F]{24}$/)) {
             return res.status(400).json({ message: 'Invalid reservation ID structure' });
@@ -76,11 +76,17 @@ const updateReservation = async (req, res) => {
 
         const userId = req.user?.id || req.user?._id;
 
+        //Build dynamic updating context body
+        const updates = {};
+        if (guests !== undefined) updates.guests = guests;
+        if (checkInDate) updates.checkInDate = checkInDate;
+        if (checkOutDate) updates.checkOutDate = checkOutDate;
+
         const updatedReservation = await Reservation.findOneAndUpdate(
-            { _id: id, user: userId }, //Ensures only the guest who made the booking can edit it
-            { $set: { guests } },
+            { _id: id, user: userId }, 
+            { $set: updates },
             { new: true }
-        );
+        ).populate('accommodation', 'title location image price');
 
         if (!updatedReservation) {
             return res.status(404).json({ message: 'Reservation not found or unauthorized access' });
