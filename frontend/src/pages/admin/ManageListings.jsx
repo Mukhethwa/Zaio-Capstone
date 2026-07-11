@@ -48,6 +48,10 @@ const ManageListings = () => {
         }
     };
 
+    const handleEditChange = (e) => {
+        setEditingListing({ ...editingListing, [e.target.name]: e.target.value });
+    };
+
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
         try {
