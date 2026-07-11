@@ -56,7 +56,7 @@ const getUserReservations = async (req, res) => {
     try {
         const userId = req.user?.id || req.user?._id;
         const reservations = await Reservation.find({ user: userId })
-            .populate('accommodation', 'title location image price'); // Fixed: Populate field keys clearly
+            .populate('accommodation', 'title location image price'); 
 
         return res.status(200).json(reservations);
     } catch (error) {
@@ -64,11 +64,11 @@ const getUserReservations = async (req, res) => {
     }
 };
 
-//PUT /api/reservations/:id - Edit an existing booking's parameters
+//PUT /api/reservations/:id - Edit an existing booking's parameters dynamically
 const updateReservation = async (req, res) => {
     try {
         const { id } = req.params;
-        const { guests, checkInDate, checkOutDate } = req.body;
+        const { guests, checkInDate, checkOutDate, totalPrice } = req.body; //Captured totalPrice from request
 
         if (!id.match(/^[0-9a-fA-F]{24}$/)) {
             return res.status(400).json({ message: 'Invalid reservation ID structure' });
@@ -76,11 +76,11 @@ const updateReservation = async (req, res) => {
 
         const userId = req.user?.id || req.user?._id;
 
-        //Build dynamic updating context body
         const updates = {};
         if (guests !== undefined) updates.guests = guests;
         if (checkInDate) updates.checkInDate = checkInDate;
         if (checkOutDate) updates.checkOutDate = checkOutDate;
+        if (totalPrice !== undefined) updates.totalPrice = totalPrice; //Injected live calculation context into database save operations
 
         const updatedReservation = await Reservation.findOneAndUpdate(
             { _id: id, user: userId }, 
