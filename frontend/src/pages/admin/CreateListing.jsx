@@ -59,10 +59,10 @@ function CreateListing() {
       data.append('amenities', formData.amenities);
       
       if (selectedFile) {
-        data.append('image', selectedFile);
+        data.append('images', selectedFile); // Changed to plural 'images'
       }
 
-      await axios.post('http://localhost:5000/api/accommodations', data, {
+      await axios.post('/api/accommodations', data, { // Removed http://localhost:5000
         headers: { 
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'multipart/form-data'

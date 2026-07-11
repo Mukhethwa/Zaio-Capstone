@@ -34,7 +34,8 @@ const ManageListings = () => {
         if (window.confirm("Are you sure you want to delete this listing?")) {
             try {
                 const token = localStorage.getItem('token');
-                await axios.delete(`http://localhost:5000/api/accommodations/${id}`, {
+                // Removed localhost
+                await axios.delete(`/api/accommodations/${id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setListings(listings.filter(l => l._id !== id));
@@ -47,24 +48,32 @@ const ManageListings = () => {
         }
     };
 
-    const handleEditChange = (e) => {
-        setEditingListing({ ...editingListing, [e.target.name]: e.target.value });
-    };
-
     const handleUpdateSubmit = async (e) => {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
             
-            const payload = {
-                ...editingListing,
-                amenities: typeof editingListing.amenities === 'string' 
-                    ? editingListing.amenities.split(',').map(item => item.trim()) 
-                    : editingListing.amenities
-            };
+            // Format as FormData so the backend Multer middleware accepts it
+            const updateData = new FormData();
+            updateData.append('title', editingListing.title || '');
+            updateData.append('location', editingListing.location || '');
+            updateData.append('description', editingListing.description || '');
+            updateData.append('price', editingListing.price || 0);
+            updateData.append('guests', editingListing.guests || 1);
+            updateData.append('bedrooms', editingListing.bedrooms || 1);
+            updateData.append('bathrooms', editingListing.bathrooms || 1);
+            
+            const amenitiesStr = typeof editingListing.amenities === 'string' 
+                ? editingListing.amenities 
+                : editingListing.amenities.join(', ');
+            updateData.append('amenities', amenitiesStr);
 
-            const res = await axios.put(`http://localhost:5000/api/accommodations/${editingListing._id}`, payload, {
-                headers: { Authorization: `Bearer ${token}` }
+            // Removed localhost
+            const res = await axios.put(`/api/accommodations/${editingListing._id}`, updateData, {
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                }
             });
 
             setListings(listings.map(l => l._id === editingListing._id ? res.data : l));

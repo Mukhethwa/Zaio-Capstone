@@ -44,7 +44,7 @@ function AdminReservations() {
       setError('');
       setSuccess('');
 
-      await axios.delete(`http://localhost:5000/api/admin/reservations/${reservationId}`, {
+      await axios.delete(`/api/admin/reservations/${reservationId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

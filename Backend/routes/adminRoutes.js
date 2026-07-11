@@ -1,16 +1,15 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 
-//Dynamically extract the existing models from the Mongoose register to prevent re-import errors
-const Reservation = mongoose.model('Reservation'); 
+// 1. Directly require the model to prevent initialization race conditions
+const Reservation = require('../models/Reservation'); 
+const verifyToken = require('../middleware/auth'); // Require your existing auth middleware
 
 //@desc    Get all guest bookings for the admin reservation overview matrix
 //@route   GET /api/admin/reservations
 //@access  Private/Admin
-router.get('/reservations', async (req, res) => {
+router.get('/reservations', verifyToken, async (req, res) => {
     try {
-        //Find all reservations and cleanly populate user information (username, email) and accommodation details
         const bookings = await Reservation.find({})
             .populate('user', 'username email') 
             .populate('accommodation', 'title location') 
@@ -26,7 +25,7 @@ router.get('/reservations', async (req, res) => {
 //@desc    Administrative override to drop/revoke a booking reservation completely
 //@route   DELETE /api/admin/reservations/:id
 //@access  Private/Admin
-router.delete('/reservations/:id', async (req, res) => {
+router.delete('/reservations/:id', verifyToken, async (req, res) => {
     try {
         const booking = await Reservation.findById(req.params.id);
 
