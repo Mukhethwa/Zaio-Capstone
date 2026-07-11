@@ -5,12 +5,20 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path'); 
 require('dotenv').config();
+const fs = require('fs');
 
 const app = express();
 
 //Middleware
 app.use(express.json());
 app.use(cors());
+
+//create upload folder on folder each time upload is triggerred
+// --- ADD THIS BLOCK ---
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)){
+    fs.mkdirSync(uploadDir);
+}
 
 //Serve static uploaded listing images cleanly from the root directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
