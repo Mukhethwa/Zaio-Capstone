@@ -9,6 +9,11 @@ function Home() {
   const [error, setError] = useState('');
   const [futureTab, setFutureTab] = useState('outdoor');
 
+  // Check auth status for rendering dynamic buttons
+  const token = localStorage.getItem('token');
+  const role = localStorage.getItem('role');
+  const isGuestLoggedIn = token && role !== 'admin';
+
   useEffect(() => {
     const fetchAccommodations = async () => {
       try {
@@ -49,6 +54,12 @@ function Home() {
         {/* Property Showcase Header */}
         <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Explore stays</h2>
+            {/* NEW: Displays the "My Trips" button only if the user is a logged-in guest */}
+            {isGuestLoggedIn && (
+              <Link to="/my-reservations" className="bg-rose-500 hover:bg-rose-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md transition transform active:scale-95 no-underline">
+                  View My Trips
+              </Link>
+            )}
         </div>
 
         {loading && (
@@ -80,7 +91,7 @@ function Home() {
                 <Link to={`/location/${item._id}`} key={item._id} className="group flex flex-col gap-2 no-underline">
                   <div className="aspect-square w-full relative overflow-hidden rounded-xl bg-gray-100">
                     <img 
-                      src={item.image ? `http://localhost:5000${item.image}` : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6'} 
+                      src={item.image ? item.image : 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6'} 
                       alt={item.title} 
                       className="h-full w-full object-cover object-center group-hover:scale-105 transition duration-300"
                     />
@@ -104,7 +115,6 @@ function Home() {
           )
         )}
 
-        {/* 1. INSPIRATION FOR YOUR NEXT TRIP SECTION (UPDATED WITH REAL PHOTOS) */}
         <section className="mb-16">
           <h2 className="text-2xl font-bold text-gray-900 tracking-tight mb-6">Inspiration for your next trip</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -146,7 +156,6 @@ function Home() {
           </div>
         </section>
 
-        {/* 2. DISCOVER EXPERIENCE SECTION */}
         <section className="mb-16">
           <h2 className="text-2xl font-bold text-gray-900 tracking-tight mb-2">Discover Airbnb Experiences</h2>
           <p className="text-gray-500 text-sm mb-6 font-medium">Unique activities with local experts hosted directly inside your city blocks.</p>
@@ -170,7 +179,6 @@ function Home() {
           </div>
         </section>
 
-        {/* 3. SHOP GIFT CARDS SECTION (UPDATED TO AIRBNB LOGO) */}
         <section className="mb-16 bg-gray-950 text-white rounded-2xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 shadow-md relative overflow-hidden">
           <div className="space-y-3 max-w-md text-left z-10">
             <h2 className="text-2xl font-bold tracking-tight">Shop Airbnb Gift Cards</h2>
@@ -197,7 +205,6 @@ function Home() {
           <div className="absolute -right-10 -bottom-10 w-48 h-48 bg-rose-500/10 rounded-full blur-3xl pointer-events-none" />
         </section>
 
-        {/* 4. QUESTIONS ABOUT HOSTING BANNER */}
         <section className="mb-16 relative rounded-2xl overflow-hidden h-[320px] md:h-[400px] shadow-md group">
           <img 
             src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1200" 
@@ -217,11 +224,9 @@ function Home() {
           </div>
         </section>
 
-        {/* 5. INSPIRATION FOR FUTURE GETAWAYS SECTION (PRE-FOOTER TAB MATRIX) */}
         <section className="border-t border-gray-200 pt-10 pb-6">
           <h3 className="text-lg font-bold text-gray-900 mb-4 text-left">Inspiration for future getaways</h3>
           
-          {/* Tab Selector Links */}
           <div className="flex border-b border-gray-200 gap-6 text-xs font-bold text-gray-500 overflow-x-auto scrollbar-none pb-2 select-none">
             <span 
               onClick={() => setFutureTab('outdoor')}
@@ -249,7 +254,6 @@ function Home() {
             </span>
           </div>
 
-          {/* Dynamic Grid Panels Layout depending on React Hooks state */}
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-y-4 gap-x-2 text-left text-xs pt-6">
             {futureTab === 'outdoor' && (
               <>

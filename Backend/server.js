@@ -35,7 +35,7 @@ mongoose.connection.on('disconnected', () => {
 //Application API Endpoint Routes
 app.use('/api/accommodations', require('./routes/accommodationRoutes')); 
 app.use('/api/users', require('./routes/userRoutes')); 
-app.use('/api/reservations', require('./routes/reservationRoutes')); 
+app.use('/api/reservations', require('./routes/reservationRoutes')); //FIXED: Now correctly points to reservationRoutes
 app.use('/api/admin', require('./routes/adminRoutes'));
 
 
@@ -43,8 +43,7 @@ if (process.env.NODE_ENV === 'production' || true) {
     //Serve static built production folder assets from frontend/build
     app.use(express.static(path.join(__dirname, '../frontend/build')));
 
-    //FIXED: Switched from a string pattern to a native RegExp literal (/.*/) 
-    //This completely bypasses path-to-regexp validation errors entirely
+    //Native RegExp literal bypasses path-to-regexp validation errors
     app.get(/.*/, (req, res) => {
         res.sendFile(path.resolve(__dirname, '../frontend', 'build', 'index.html'));
     });
